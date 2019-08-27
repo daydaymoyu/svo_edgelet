@@ -2,7 +2,7 @@
 # user build settings
 
 SET(TRACE TRUE)
-SET(HAVE_G2O false)   #TRUE
+SET(HAVE_G2O FALSE)   #TRUE
 
 SET(DEBUG_OUTPUT TRUE) # Only relevant if build without ROS
 
@@ -26,7 +26,7 @@ IF(DEBUG_OUTPUT)
 ENDIF()
 
 # Set build flags, set ARM_ARCHITECTURE environment variable on Odroid
-SET(CMAKE_CXX_FLAGS "-Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unknown-pragmas")
+SET(CMAKE_CXX_FLAGS "-Wall -D_LINUX -D_REENTRANT -march=native -Wno-unused-variable -Wno-unknown-pragmas")
 IF(DEFINED ENV{ARM_ARCHITECTURE})
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpu=neon -march=armv7-a")
 ELSE()
@@ -39,7 +39,7 @@ ELSE()
 ENDIF()
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3 -fsee -fomit-frame-pointer -fno-signed-zeros -fno-math-errno -funroll-loops")
 
-# Add plain cmake packages 
+# Add plain cmake packages
 FIND_PACKAGE(OpenCV REQUIRED)
 FIND_PACKAGE(Eigen REQUIRED)
 FIND_PACKAGE(Sophus REQUIRED)
@@ -64,7 +64,7 @@ INCLUDE_DIRECTORIES(
 )
 
 # Set link libraries
-LIST(APPEND LINK_LIBS 
+LIST(APPEND LINK_LIBS
   ${OpenCV_LIBS}
   ${Sophus_LIBRARIES}
   ${Boost_LIBRARIES}

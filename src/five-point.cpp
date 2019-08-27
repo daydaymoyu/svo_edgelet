@@ -1,6 +1,6 @@
 /*  Copyright (c) 2013, Bo Li, prclibo@gmail.com
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
         * Redistributions of source code must retain the above copyright
@@ -11,7 +11,7 @@
         * Neither the name of the copyright holder nor the
           names of its contributors may be used to endorse or promote products
           derived from this software without specific prior written permission.
-    
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
     ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
     WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -32,7 +32,7 @@
 #include <complex>
 
 //using namespace cv;
-using namespace std; 
+using namespace std;
 
 namespace svo {
 
@@ -97,9 +97,9 @@ cv::Mat findEssentialMat( cv::InputArray _points1, cv::InputArray _points2, doub
         _E = E;
         count = estimator.runKernel(&p1, &p2, &_E);
         E = E.rowRange(0, 3 * count) * 1.0;
-        cv::Mat(tempMask).setTo(true);
+        cv::cvarrToMat(tempMask).setTo(true);
     }
-    else if (method == CV_RANSAC)
+    else if (method == cv::FM_RANSAC)
   {
     estimator.runRANSAC(&p1, &p2, &_E, tempMask, threshold, prob);
   }
@@ -111,7 +111,7 @@ cv::Mat findEssentialMat( cv::InputArray _points1, cv::InputArray _points2, doub
     {
       _mask.create(1, npoints, CV_8U, -1, true);
       cv::Mat mask = _mask.getMat();
-      cv::Mat(tempMask).copyTo(mask);
+      cv::cvarrToMat(tempMask).copyTo(mask);
     }
 
 
@@ -282,8 +282,8 @@ int CvEMEstimator::runKernel( const CvMat* m1, const CvMat* m2, CvMat* model )
 // to be of 1 row x n col x 2 channel.
 int CvEMEstimator::run5Point( const CvMat* q1, const CvMat* q2, CvMat* ematrix )
 {
-  cv::Mat Q1 = cv::Mat(q1).reshape(1, q1->cols);
-  cv::Mat Q2 = cv::Mat(q2).reshape(1, q2->cols);
+  cv::Mat Q1 = cv::cvarrToMat(q1).reshape(1, q1->cols);
+  cv::Mat Q2 = cv::cvarrToMat(q2).reshape(1, q2->cols);
 
   int n = Q1.rows;
   cv::Mat Q(n, 9, CV_64F);
@@ -391,7 +391,8 @@ int CvEMEstimator::run5Point( const CvMat* q1, const CvMat* q2, CvMat* ematrix )
 void CvEMEstimator::computeReprojError( const CvMat* m1, const CvMat* m2,
                                      const CvMat* model, CvMat* error )
 {
-    cv::Mat X1(m1), X2(m2);
+    cv::Mat X1 = cv::cvarrToMat(m1);
+    cv::Mat X2 = cv::cvarrToMat(m2);
     int n = X1.cols;
     X1 = X1.reshape(1, n);
     X2 = X2.reshape(1, n);
@@ -399,7 +400,7 @@ void CvEMEstimator::computeReprojError( const CvMat* m1, const CvMat* m2,
     X1.convertTo(X1, CV_64F);
     X2.convertTo(X2, CV_64F);
 
-   cv:: Mat E(model);
+    cv::Mat E = cv::cvarrToMat(model);
     for (int i = 0; i < n; i++)
     {
         cv::Mat x1 = (cv::Mat_<double>(3, 1) << X1.at<double>(i, 0), X1.at<double>(i, 1), 1.0);
@@ -668,4 +669,3 @@ void CvEMEstimator::getCoeffMat(double *e, double *A)
 }
 
 }
-

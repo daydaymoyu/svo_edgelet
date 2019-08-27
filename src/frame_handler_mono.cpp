@@ -49,7 +49,7 @@ void FrameHandlerMono::Debug_show_img()
         cv::rectangle(img_new,
                       cv::Point2f((*it)->px[0]-2, (*it)->px[1]-2),
                       cv::Point2f((*it)->px[0]+2, (*it)->px[1]+2),
-                      cv::Scalar(0,255,0), CV_FILLED);
+                      cv::Scalar(0,255,0), cv::FILLED);
     }
     cv::imshow("new_frame",img_new);
 
@@ -65,7 +65,7 @@ void FrameHandlerMono::Debug_show_img()
         cv::rectangle(img_last,
                       cv::Point2f((*it)->px[0]-2, (*it)->px[1]-2),
                       cv::Point2f((*it)->px[0]+2, (*it)->px[1]+2),
-                      cv::Scalar(0,255,0), CV_FILLED);
+                      cv::Scalar(0,255,0), cv::FILLED);
     }
     cv::imshow("img_last",img_last);
 
@@ -86,7 +86,7 @@ void FrameHandlerMono::Debug_show_img()
                 cv::rectangle(img,
                               cv::Point2f((*it)->px[0]-2, (*it)->px[1]-2),
                               cv::Point2f((*it)->px[0]+2, (*it)->px[1]+2),
-                              cv::Scalar(0,255,0), CV_FILLED);
+                              cv::Scalar(0,255,0), cv::FILLED);
         }
         imshow(s,img);
     }
@@ -167,7 +167,7 @@ void FrameHandlerMono::addImage(const cv::Mat& img, const double timestamp)
     /**/
 
     if(img_new.channels()<3) //this should be always true
-        cvtColor(img_new,img_new,CV_GRAY2BGR);
+        cvtColor(img_new,img_new,cv::COLOR_GRAY2BGR);
 
   if(stage_ == STAGE_SECOND_FRAME)
   {

@@ -59,6 +59,11 @@ void Frame::initFrame(const cv::Mat& img)
 
   // Build Image Pyramid
   frame_utils::createImgPyramid(img, max(Config::nPyrLevels(), Config::kltMaxLevel()+1), img_pyr_);
+
+  printf("levels: %d\n", img_pyr_.size());
+  for (int i = 0; i < img_pyr_.size(); ++i) {
+    printf("size: %d %d\n", img_pyr_[i].rows, img_pyr_[i].cols);
+  }
 }
 
 void Frame::setKeyframe()

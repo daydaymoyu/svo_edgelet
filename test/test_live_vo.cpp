@@ -95,7 +95,7 @@ void BenchmarkNode::runFromFolder()
         if (cv::waitKey(1) >= 0) break;
         if(img_id < 100) continue;
 
-        cv::cvtColor(image,image,CV_BGR2GRAY);
+        cv::cvtColor(image,image,cv::COLOR_BGR2GRAY);
         /*
         cv::Mat unimg;
         cam_pinhole_->undistortImage(image,unimg);
@@ -131,4 +131,3 @@ int main(int argc, char** argv)
     printf("BenchmarkNode finished.\n");
     return 0;
 }
-

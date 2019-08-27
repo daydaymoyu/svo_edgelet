@@ -267,7 +267,7 @@ void SparseAlign::finishIteration()
 {
   if(display_)
   {
-    cv::namedWindow("residuals", CV_WINDOW_AUTOSIZE);
+    cv::namedWindow("residuals", cv::WINDOW_AUTOSIZE);
     cv::imshow("residuals", resimg_*10);
     cv::waitKey(0);
   }
@@ -349,4 +349,3 @@ void  SparseAlign::optimize(SE3& model)
 }
 
 } // namespace svo
-

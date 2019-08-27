@@ -345,7 +345,7 @@ void computeHomography(
 
   cv::Point2d pp(0,0);
   double focal = 1;
-  cv::Mat E = svo::findEssentialMat(x1, x2, focal, pp, CV_RANSAC, 0.99, 2.0/focal_length, cv::noArray() );
+  cv::Mat E = svo::findEssentialMat(x1, x2, focal, pp, cv::FM_RANSAC, 0.99, 2.0/focal_length, cv::noArray() );
   std::cout << "=======================findEssentialMat==============================" << std::endl;
   cv::Mat R_cf,t_cf;
   recoverPose(E,x1,x2,R_cf,t_cf,focal,pp);

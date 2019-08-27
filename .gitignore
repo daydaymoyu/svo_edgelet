@@ -1,0 +1,17 @@
+# General
+.idea/**
+.DS_Store
+.vscode/**
+build/**
+debug/**
+_build/**
+
+bin/**
+!bin/EuRoC.yaml
+!bin/MH01.txt
+lib/
+
+3rdparty/**
+!3rdparty/.gitkeep
+
+*~

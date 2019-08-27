@@ -130,7 +130,7 @@ void BenchmarkNode::runFromFolder()
   for(int ni=0; ni<nImages; ni++)
   {
           std::string img_path = filepath+"/"+vstrImageFilenames[ni];
-          img = cv::imread(img_path.c_str(),CV_LOAD_IMAGE_GRAYSCALE);
+          img = cv::imread(img_path.c_str(),cv::IMREAD_GRAYSCALE);
           assert(!img.empty());
 
           // process frame
@@ -188,4 +188,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-

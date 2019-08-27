@@ -45,14 +45,14 @@ void LoadImages(const string &strPathLeft, const string &strPathRight, const str
         getline(fTimes,s);
         if(!s.empty())
         {
-            stringstream ss;
-            ss << s;
-            vstrImageLeft.push_back(strPathLeft + "/" + ss.str() + ".png");
-            vstrImageRight.push_back(strPathRight + "/" + ss.str() + ".png");
-            double t;
-            ss >> t;
+            stringstream ss(s);
+            string l, r;
+            ss >> l >> r;
+            vstrImageLeft.push_back(strPathLeft + "/" + l + ".png");
+            vstrImageRight.push_back(strPathRight + "/" + r + ".png");
+            double t = stod(l);
             vTimeStamps.push_back(t/1e9);
-
+            cout << vstrImageLeft.back() << ", " << t/1e9 << "\n";
         }
     }
 }
@@ -107,7 +107,9 @@ void BenchmarkNode::runFromFolder()
   vector<string> vstrImageLeft;
   vector<string> vstrImageRight;
   vector<double> vTimeStamp;
-  LoadImages("/media/hyj/dataset/datasets/MH_01_easy/mav0/cam0/data", "/media/hyj/dataset/datasets/MH_01_easy/mav0/cam1/data", "MH01.txt", vstrImageLeft, vstrImageRight, vTimeStamp);
+  LoadImages("/home/huangkai/data/dataset/EuRoC/MH_01_easy/mav0/cam0/data",
+  "/home/huangkai/data/dataset/EuRoC/MH_01_easy/mav0/cam1/data",
+   "/home/huangkai/data/dataset/EuRoC/MH_01_easy/mav0/time.txt", vstrImageLeft, vstrImageRight, vTimeStamp);
 
   if(vstrImageLeft.empty() || vstrImageRight.empty())
   {
@@ -122,7 +124,7 @@ void BenchmarkNode::runFromFolder()
   }
 
   // Read rectification parameters
-  cv::FileStorage fsSettings("EuRoC.yaml", cv::FileStorage::READ);
+  cv::FileStorage fsSettings("/home/huangkai/codes/svo_edgelet/bin/EuRoC.yaml", cv::FileStorage::READ);
   if(!fsSettings.isOpened())
   {
       //cerr << "ERROR: Wrong path to settings" << endl;
@@ -163,7 +165,7 @@ void BenchmarkNode::runFromFolder()
   for(int ni=100; ni<nImages; ni++)
   {
     // Read left and right images from file
-    imLeft = cv::imread(vstrImageLeft[ni],CV_LOAD_IMAGE_UNCHANGED);
+    imLeft = cv::imread(vstrImageLeft[ni],cv::IMREAD_UNCHANGED);
 
     assert(!imLeft.empty());
 
@@ -197,4 +199,3 @@ int main(int argc, char** argv)
   printf("BenchmarkNode finished.\n");
   return 0;
 }
-
