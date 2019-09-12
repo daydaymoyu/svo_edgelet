@@ -114,8 +114,7 @@ void FrameHandlerMono::initialize() {
         new feature_detection::EdgeDetector(
             cam_->width(), cam_->height(), Config::gridSize(), Config::nPyrLevels()));
 
-    DepthFilter::callback_t depth_filter_cb = boost::bind(
-        &MapPointCandidates::newCandidatePoint, &map_.point_candidates_, _1, _2);
+    DepthFilter::callback_t depth_filter_cb = boost::bind(&MapPointCandidates::newCandidatePoint, &map_.point_candidates_, _1, _2);
     depth_filter_ = new DepthFilter(feature_detector, edge_detector, depth_filter_cb);
     depth_filter_->startThread();
 }

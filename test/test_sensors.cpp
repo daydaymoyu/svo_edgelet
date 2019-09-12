@@ -175,7 +175,7 @@ void BenchmarkNode::runFromFolder() {
     output_writer = new TumOutputWriter("trajectory.tum");
 
     // std::string filepath = std::string("/Users/shuxiangqian/DataSet/evaluate/lvo/slow.sensors"); // xiaomi2s
-    std::string filepath = std::string("/Users/shuxiangqian/DataSet/evaluate/lvo/09_0.sensors");    // xiaomi8
+    std::string filepath = std::string("/Users/shuxiangqian/DataSet/evaluate/lvo/09_0.sensors"); // xiaomi8
     RawDataReader reader(filepath);
     while (true) {
         reader.Read<unsigned char>(&type, sizeof(unsigned char));
@@ -187,20 +187,21 @@ void BenchmarkNode::runFromFolder() {
             reader.Read<unsigned char>(data, sizeof(unsigned char), width * height);
             cv::Mat image(height, width, CV_8UC1, data);
 
+            std::cout << std::endl;
+            std::cout << "frame id: " << img_id << std::endl;
             vo_->addImage(image, 0.01 * img_id);
 
-            if (vo_->lastFrame() != NULL) {
-                std::cout << "Frame-Id: " << vo_->lastFrame()->id_ << " \t"
-                          << "#Features: " << vo_->lastNumObservations() << " \n";
-            }
+            // if (vo_->lastFrame() != NULL) {
+            //     std::cout << "--- Frame-Id: " << vo_->lastFrame()->id_ << " \t"
+            //               << "#Features: " << vo_->lastNumObservations() << " \n";
+            // }
 
-            OutputPose pose;
-            pose.q = vo_->lastFrame()->T_f_w_.inverse().unit_quaternion();
-            pose.p = vo_->lastFrame()->T_f_w_.inverse().translation();
-            output_writer->write_pose(time_now(), pose);
-
+            // OutputPose pose;
+            // pose.q = vo_->lastFrame()->T_f_w_.inverse().unit_quaternion();
+            // pose.p = vo_->lastFrame()->T_f_w_.inverse().translation();
+            // output_writer->write_pose(time_now(), pose);
+            char c = getchar();
             img_id++;
-
         } else if (type == 18) {
             reader.Read<double>(&gravity_time, sizeof(double));
             reader.Read<double>(gravity, sizeof(double), 3);

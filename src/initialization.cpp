@@ -32,6 +32,8 @@ namespace initialization {
     InitResult KltHomographyInit::addFirstFrame(FramePtr frame_ref) {
         reset();
         detectFeatures(frame_ref, fts_type_, px_ref_, f_ref_);
+        std::cout << "first frame, detected kp num: " << px_ref_.size() << std::endl;
+        std::cout << "frame's kp num: " << frame_ref->fts_.size() << std::endl;
         if (px_ref_.size() < 100) {
             SVO_WARN_STREAM_THROTTLE(2.0, "First image has less than 100 features. Retry in more textured environment.");
             return FAILURE;
@@ -43,6 +45,7 @@ namespace initialization {
                 fts_center_img++;
             }
         }
+        std::cout << "first frame, features num in center img: " << fts_center_img << std::endl;
         if (fts_center_img < 50) {
             SVO_WARN_STREAM_THROTTLE(2.0, "First image,  features in center img are less. Retry in more textured environment.");
             return FAILURE;
@@ -52,7 +55,9 @@ namespace initialization {
 
         img_prev_ = frame_ref_->img_pyr_[0].clone(); // init img_prev_:  used to track feature frame by frame
         px_prev_ = px_ref_;
+        std::cout << "px_cur_ size: " << px_cur_.size() << std::endl;
         px_cur_.insert(px_cur_.begin(), px_ref_.begin(), px_ref_.end());
+        std::cout << "px_cur_ size: " << px_cur_.size() << std::endl;
         return SUCCESS;
     }
 

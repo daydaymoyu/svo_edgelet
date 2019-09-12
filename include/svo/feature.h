@@ -22,74 +22,72 @@
 namespace svo {
 
 /// A salient image region that is tracked across frames.
-struct Feature
-{
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+struct Feature {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  enum FeatureType {
-    CORNER,
-    EDGELET
-  };
+    enum FeatureType {
+        CORNER,
+        EDGELET
+    };
 
-  FeatureType type;     //!< Type can be corner or edgelet.
-  Frame* frame;         //!< Pointer to frame in which the feature was detected.
-  Vector2d px;          //!< Coordinates in pixels on pyramid level 0.
-  Vector3d f;           //!< Unit-bearing vector of the feature.
-  int level;            //!< Image pyramid level where feature was extracted.
-  Point* point;         //!< Pointer to 3D point which corresponds to the feature.
-  Vector2d grad;        //!< Dominant gradient direction for edglets, normalized.
-  Vector2d grad_cur_ ; // edgelete grad direction in cur frame hyj
+    FeatureType type;   //!< Type can be corner or edgelet.
+    Frame* frame;       //!< Pointer to frame in which the feature was detected.
+    Vector2d px;        //!< Coordinates in pixels on pyramid level 0.
+    Vector3d f;         //!< Unit-bearing vector of the feature. put px in z = 1 plane, and then normalize it
+    int level;          //!< Image pyramid level where feature was extracted.
+    Point* point;       //!< Pointer to 3D point which corresponds to the feature.
+    Vector2d grad;      //!< Dominant gradient direction for edglets, normalized.
+    Vector2d grad_cur_; // edgelete grad direction in cur frame hyj
 
-  Feature(Frame *_frame, const Vector2d &_px, const Vector2d &_grad, int _level):
-    type(EDGELET),
-    frame(_frame),
-    px(_px),
-    f(frame->cam_->cam2world(px)),
-    level(_level),
-    point(NULL),
-    grad(_grad)
-  {}
+    Feature(Frame* _frame, const Vector2d& _px, const Vector2d& _grad, int _level) :
+        type(EDGELET),
+        frame(_frame),
+        px(_px),
+        f(frame->cam_->cam2world(px)),
+        level(_level),
+        point(NULL),
+        grad(_grad) {
+    }
 
-  Feature(Frame* _frame, const Vector2d& _px, int _level) :
-    type(CORNER),
-    frame(_frame),
-    px(_px),
-    f(frame->cam_->cam2world(px)),
-    level(_level),
-    point(NULL),
-    grad(1.0,0.0)
-  {}
+    Feature(Frame* _frame, const Vector2d& _px, int _level) :
+        type(CORNER),
+        frame(_frame),
+        px(_px),
+        f(frame->cam_->cam2world(px)),
+        level(_level),
+        point(NULL),
+        grad(1.0, 0.0) {
+    }
 
-  Feature(Frame* _frame, const Vector2d& _px, const Vector3d& _f, int _level) :
-    type(CORNER),
-    frame(_frame),
-    px(_px),
-    f(_f),
-    level(_level),
-    point(NULL),
-    grad(1.0,0.0)
-  {}
+    Feature(Frame* _frame, const Vector2d& _px, const Vector3d& _f, int _level) :
+        type(CORNER),
+        frame(_frame),
+        px(_px),
+        f(_f),
+        level(_level),
+        point(NULL),
+        grad(1.0, 0.0) {
+    }
 
-  Feature(Frame* _frame, Point* _point, const Vector2d& _px, const Vector3d& _f, int _level) :
-    type(CORNER),
-    frame(_frame),
-    px(_px),
-    f(_f),
-    level(_level),
-    point(_point),
-    grad(1.0,0.0)
-  {}
+    Feature(Frame* _frame, Point* _point, const Vector2d& _px, const Vector3d& _f, int _level) :
+        type(CORNER),
+        frame(_frame),
+        px(_px),
+        f(_f),
+        level(_level),
+        point(_point),
+        grad(1.0, 0.0) {
+    }
 
-  Feature(Frame* _frame, Point* _point, const Vector2d& _px, const Vector3d& _f, const Vector2d &_grad,int _level) :
-    type(EDGELET),
-    frame(_frame),
-    px(_px),
-    f(_f),
-    level(_level),
-    point(_point),
-    grad(_grad)
-  {}
-
+    Feature(Frame* _frame, Point* _point, const Vector2d& _px, const Vector3d& _f, const Vector2d& _grad, int _level) :
+        type(EDGELET),
+        frame(_frame),
+        px(_px),
+        f(_f),
+        level(_level),
+        point(_point),
+        grad(_grad) {
+    }
 };
 
 } // namespace svo
