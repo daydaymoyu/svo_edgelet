@@ -141,3 +141,6 @@ TARGET_LINK_LIBRARIES(test_pipel_euroc svo)
 
 ADD_EXECUTABLE(test_live_vo test/test_live_vo.cpp)
 TARGET_LINK_LIBRARIES(test_live_vo svo)
+
+ADD_EXECUTABLE(test_sensors test/test_sensors.cpp)
+TARGET_LINK_LIBRARIES(test_sensors svo)
