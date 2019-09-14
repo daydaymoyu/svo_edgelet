@@ -16,7 +16,9 @@ namespace SLAM_VIEWER {
 class Viewer {
   public:
     Viewer(svo::FrameHandlerMono* vo);
+    void init();
     void run();
+    void draw();
     bool CheckFinish();
     void DrawKeyFrames(const bool bDrawKF);
     void DrawMapRegionPoints();

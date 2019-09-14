@@ -76,10 +76,15 @@ void Frame::setKeyPoints() {
     std::cout << "Frame::setKeyPoints(): " << std::endl;
     std::cout << "frame's kp num: " << fts_.size() << std::endl;
     std::cout << "frame's key_pts_ num: " << key_pts_.size() << std::endl;
-    for (size_t i = 0; i < 5; ++i)
-        if (key_pts_[i] != NULL)
+    for (size_t i = 0; i < 5; ++i) {
+        if (key_pts_[i] != NULL) {
             if (key_pts_[i]->point == NULL)
                 key_pts_[i] = NULL;
+        }
+        // else {
+        //     std::cout << "key_pts_[i] == NULL" << std::endl;
+        // }
+    }
 
     std::for_each(fts_.begin(), fts_.end(), [&](Feature* ftr) { if(ftr->point != NULL) checkKeyPoints(ftr); });
 

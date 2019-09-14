@@ -29,6 +29,8 @@
 #include <svo/slamviewer.h>
 #include <thread>
 
+#define MAC
+
 static double time_now() {
     return std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 }
@@ -149,10 +151,14 @@ BenchmarkNode::BenchmarkNode() {
     vo_ = new svo::FrameHandlerMono(cam_);
     vo_->start();
 
-    // viewer_ = new SLAM_VIEWER::Viewer(vo_);
-    // viewer_thread_ = new std::thread(&SLAM_VIEWER::Viewer::run, viewer_);
-    // viewer_thread_->detach();
-    // viewer_thread_->join();
+#ifdef MAC
+    viewer_ = new SLAM_VIEWER::Viewer(vo_);
+    viewer_->init();
+#else
+    viewer_ = new SLAM_VIEWER::Viewer(vo_);
+    viewer_thread_ = new std::thread(&SLAM_VIEWER::Viewer::run, viewer_);
+    viewer_thread_->detach();
+#endif
 }
 
 BenchmarkNode::~BenchmarkNode() {
@@ -174,8 +180,8 @@ void BenchmarkNode::runFromFolder() {
 
     output_writer = new TumOutputWriter("trajectory.tum");
 
-    // std::string filepath = std::string("/Users/shuxiangqian/DataSet/evaluate/lvo/slow.sensors"); // xiaomi2s
-    std::string filepath = std::string("/Users/shuxiangqian/DataSet/evaluate/lvo/09_0.sensors"); // xiaomi8
+    // std::string filepath = std::string("/Users/../DataSet/evaluate/lvo/slow.sensors"); // xiaomi2s
+    std::string filepath = std::string("/Users/../DataSet/evaluate/lvo/09_0.sensors"); // xiaomi8
     RawDataReader reader(filepath);
     while (true) {
         reader.Read<unsigned char>(&type, sizeof(unsigned char));
@@ -190,7 +196,16 @@ void BenchmarkNode::runFromFolder() {
             std::cout << std::endl;
             std::cout << "frame id: " << img_id << std::endl;
             vo_->addImage(image, 0.01 * img_id);
+            OutputPose pose;
+            pose.q = vo_->lastFrame()->T_f_w_.inverse().unit_quaternion();
+            pose.p = vo_->lastFrame()->T_f_w_.inverse().translation();
+            std::cout << "ov_last_frame id: " << vo_->lastFrame()->id_ << std::endl;
+            std::cout << "pose.q: " << pose.q.w() << " " << pose.q.x() << " " << pose.q.y() << " " << pose.q.z() << std::endl;
+            std::cout << "pose.p: " << pose.p.x() << " " << pose.p.y() << " " << pose.p.z() << std::endl;
 
+#ifdef MAC
+            viewer_->draw();
+#endif
             // if (vo_->lastFrame() != NULL) {
             //     std::cout << "--- Frame-Id: " << vo_->lastFrame()->id_ << " \t"
             //               << "#Features: " << vo_->lastNumObservations() << " \n";
@@ -200,7 +215,7 @@ void BenchmarkNode::runFromFolder() {
             // pose.q = vo_->lastFrame()->T_f_w_.inverse().unit_quaternion();
             // pose.p = vo_->lastFrame()->T_f_w_.inverse().translation();
             // output_writer->write_pose(time_now(), pose);
-            char c = getchar();
+            // char c = getchar();      // just for puse
             img_id++;
         } else if (type == 18) {
             reader.Read<double>(&gravity_time, sizeof(double));

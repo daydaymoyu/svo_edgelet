@@ -65,20 +65,28 @@ namespace initialization {
         //trackKlt(frame_ref_, frame_cur, px_ref_, px_cur_, f_ref_, f_cur_, disparities_);
         trackKlt(frame_ref_, frame_cur, fts_type_, px_ref_, px_cur_, f_ref_, f_cur_, disparities_, img_prev_, px_prev_);
         SVO_INFO_STREAM("Init: KLT tracked " << disparities_.size() << " features");
+        std::cout << " after trackKlt, px_ref_ size: " << px_ref_.size() << std::endl;
+        std::cout << " after trackKlt, px_cur_ size: " << px_cur_.size() << std::endl;
+        std::cout << " after trackKlt, disparities_ size: " << disparities_.size() << std::endl;
 
-        if (disparities_.size() < Config::initMinTracked())
+        if (disparities_.size() < Config::initMinTracked()) {
+            std::cout << " disparities_.size() < Config::initMinTracked(), FAILURE" << std::endl;
             return FAILURE;
+        }
 
         double disparity = svo::getMedian(disparities_);
 
         SVO_INFO_STREAM("Init: KLT " << disparity << "px average disparity.");
-        if (disparity < Config::initMinDisparity())
+        if (disparity < Config::initMinDisparity()) {
+            std::cout << " disparity < Config::initMinDisparity(), NO_KEYFRAME" << std::endl;
             return NO_KEYFRAME;
+        }
 
         double sum = std::accumulate(disparities_.begin(), disparities_.end(), 0.0);
         double mean = sum / disparities_.size();
         double sq_sum = std::inner_product(disparities_.begin(), disparities_.end(), disparities_.begin(), 0.0);
         double stdev = std::sqrt(sq_sum / disparities_.size() - mean * mean);
+        std::cout << "INIT  stdev: " << stdev << std::endl;
 
         int method_flag(1); // H method
         if (stdev > 15) {
@@ -226,18 +234,10 @@ void trackKlt(
   }
 }
 */
-
-    void trackKlt(
-        FramePtr frame_ref,
-        FramePtr frame_cur,
-        vector<Vector3d>& fts_type,
-        vector<cv::Point2f>& px_ref,
-        vector<cv::Point2f>& px_cur,
-        vector<Vector3d>& f_ref,
-        vector<Vector3d>& f_cur,
-        vector<double>& disparities,
-        cv::Mat& img_prev,
-        vector<cv::Point2f>& px_prev) {
+    void trackKlt(FramePtr frame_ref, FramePtr frame_cur, vector<Vector3d>& fts_type,
+                  vector<cv::Point2f>& px_ref, vector<cv::Point2f>& px_cur,
+                  vector<Vector3d>& f_ref, vector<Vector3d>& f_cur,
+                  vector<double>& disparities, cv::Mat& img_prev, vector<cv::Point2f>& px_prev) {
         const double klt_win_size = 30.0; //30
         const int klt_max_iter = 30;
         const double klt_eps = 0.001;
@@ -286,15 +286,8 @@ void trackKlt(
 #define ESSENTIAL
 //#define FUNDAMENTA
 #define HOMOGRAPHY
-    void computeHomography(
-        const vector<Vector3d>& f_ref,
-        const vector<Vector3d>& f_cur,
-        double focal_length,
-        double reprojection_threshold,
-        vector<int>& inliers,
-        vector<Vector3d>& xyz_in_cur,
-        SE3& T_cur_from_ref,
-        int method_choose) {
+    void computeHomography(const vector<Vector3d>& f_ref, const vector<Vector3d>& f_cur, double focal_length, double reprojection_threshold,
+                           vector<int>& inliers, vector<Vector3d>& xyz_in_cur, SE3& T_cur_from_ref, int method_choose) {
         vector<int> outliers;
 
         if (2 == method_choose) //  E method

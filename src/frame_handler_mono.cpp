@@ -136,6 +136,11 @@ void FrameHandlerMono::addImage(const cv::Mat& img, const double timestamp) {
     new_frame_.reset(new Frame(cam_, img.clone(), timestamp));
     SVO_STOP_TIMER("pyramid_creation");
 
+    auto q = new_frame_->T_f_w_.inverse().unit_quaternion();
+    auto p = new_frame_->T_f_w_.inverse().translation();
+    std::cout << "new_frame_ pose.q: " << q.w() << " " << q.x() << " " << q.y() << " " << q.z() << std::endl;
+    std::cout << "new_frame_ pose.p: " << p.x() << " " << p.y() << " " << p.z() << std::endl;
+
     // process frame
     UpdateResult res = RESULT_FAILURE;
     if (stage_ == STAGE_DEFAULT_FRAME)
